@@ -20,12 +20,11 @@
         </div>
     </div>
 </div>
-
 <div class="table100 ver4 m-b-110">
     <table data-vertable="ver4">
         <thead>
         <tr class="row100 head">
-            <th class="column1 text-center" data-column="column1">#</th>
+            <th class="column1 text-center">#</th>
             <th class="column2 text-center">Name</th>
             <th class="column2 text-center">Price</th>
             <th class="column2 text-center">Category</th>
@@ -45,7 +44,8 @@
             <td class="text-center">{$ product.productMaterial $}</td>
             <td class="text-center">{$ product.Delivery | date : format : timezone $}</td>
             <td class="text-center">
-                <span class="btn btn-danger" ng-click="detailProduct(product.id)" data-toggle="modal" data-target="#DetailProduct">Detail</span>
+                <span class="btn btn-danger" ng-click="detailProduct(product.id)" data-toggle="modal" data-target="#DetailProduct"><i class="fa fa-bars" aria-hidden="true"></i></span>
+                <span class="btn btn-danger" ng-click="loadProduct(product)" data-toggle="modal" data-target="#EditProduct"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
             </td>
         </tr>
         </tbody>

@@ -73,6 +73,68 @@ class ProductsController extends Controller
 
     /**
      * @Rest\View()
+     * @Rest\Get("/api/product/edit/{id}")
+     */
+    public function getApiProductEditAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $product = $em->getRepository(Products::class)->findOneById($id);
+
+        if (empty($product)) {
+            return new JsonResponse(['message' => 'Product Not Found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setIgnoredAttributes(array("reviews"));
+        $encoder = new JsonEncoder();
+        $serializer = new Serializer(array($normalizer), array($encoder));
+        $object = $serializer->serialize($product, 'json');
+
+        $view = View::create($object);
+        $view->setFormat('json');
+
+        return $view;
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Post("/api/product/update")
+     */
+    public function postApiProductEditAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $json = $request->get('product');
+        $productObj = json_decode($json,true);
+
+        $product = $em->getRepository(Products::class)->findOneById($productObj['id']);
+        if (empty($product)) {
+            return new JsonResponse(['message' => 'Product Not Found'], Response::HTTP_NOT_FOUND);
+        }
+        $product->addProduct(
+            $productObj['productName'],
+            $productObj['basePrise'],
+            $productObj['category'],
+            $productObj['brand'],
+            $productObj['productMaterial'],
+            $productObj['imageUrl'],
+            $productObj['Delivery'],
+            $productObj['Details']
+        );
+        $em->flush();
+
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setIgnoredAttributes(array("reviews"));
+        $encoder = new JsonEncoder();
+        $serializer = new Serializer(array($normalizer), array($encoder));
+        $object = $serializer->serialize($product, 'json');
+        $view = View::create($object);
+        $view->setFormat('json');
+
+        return $view;
+    }
+
+    /**
+     * @Rest\View()
      * @Rest\Get("/api/products/categories")
      */
     public function getApiCategoriesAction()

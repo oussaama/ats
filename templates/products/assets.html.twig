@@ -6,7 +6,7 @@
         $interpolateProvider.endSymbol('$}');
     });
 
-    app.controller('CtrlProduct', function ($scope, $http) {
+    app.controller('CtrlProduct', function ($scope,$rootScope, $http) {
         $scope.limit = 20;
         $scope.category = null;
         $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/1';
@@ -178,11 +178,40 @@
 
                     html = "";
                     for (i = 0; i < $scope.productDetail.reviews.length; i++) {
-                        html += "<tr> <td>" + $scope.productDetail.reviews[i].Rating + "</td>\n" +
-                            " <td>" + $scope.productDetail.reviews[i].content + "</td></tr>";
+                        html += '<div class="media border p-3"> \n'+
+                        '<img src="https://www.w3schools.com/bootstrap4/img_avatar3.png" alt="John Doe" class="mr-3" style="width:60px;"> \n'+
+                           '<div class="media-body">\n'+
+                            '<h5>Rating :'+$scope.productDetail.reviews[i].Rating+'<small><i> Posted on February 19, 2016</i></small></h5> \n'+
+                        '<p>'+$scope.productDetail.reviews[i].content+'</p>\n'+
+                        '</div> </div>';
                     }
                     $('.review').html(html);
                     console.log($scope.productDetail);
+                }
+            });
+        };
+
+        $scope.loadProduct = function (product) {
+            $scope.editProduct={
+                'productName': product.productName,
+                'basePrise':product.basePrise,
+                'Delivery': product.Delivery,
+                'Details': product.Details,
+                'brand': product.brand,
+                'category': product.category,
+                'id': product.id,
+                'imageUrl': product.imageUrl,
+                'productMaterial': product.productMaterial,
+            };
+        };
+
+
+        $scope.update = function () {
+            //filter paginator
+            urlUpdate = 'http://localhost/ats/public/index.php/api/product/update';
+            $http.post(urlUpdate,{ 'product' : JSON.stringify($scope.editProduct) }).then(function (response) {
+                if (response.message == null) {
+                    window.location.reload(true);
                 }
             });
         };

@@ -186,12 +186,33 @@ th, td {
   font-family: Montserrat-Regular;
 }
 
+.btn-danger{
+  background: #fa4251 !important;
+  color:#fff !important;
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: .5rem .75rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: #495057;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .15) !important;
+  border-radius: .25rem;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
 select{
-   background: #fa4251 !important;
-   color:#fff !important;
-   border-color: #fa4251 !important;
-   text-shadow:0 1px 0 rgba(0,0,0,0.4);
- }
+  background: #fa4251 !important;
+  color:#fff !important;
+  border-color: #fa4251 !important;
+  text-shadow:0 1px 0 rgba(0,0,0,0.4);
+}
 
 select option:hover{
   background: #fa4251 !important;
@@ -201,12 +222,6 @@ select option:hover{
 option:not(:checked) {
   background-color: white;
   color:#000;
-}
-.btn-danger{
-  background: #fa4251 !important;
-  color:#fff !important;
-  border-radius: 0 !important;
-  border: none !important;
 }
 
 /*==================================================================
