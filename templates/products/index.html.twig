@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100 ver1 m-b-110">
+                <div ng-controller="CtrlProduct"class="container custom-body">
+                    <!-- list products -->
+                        {% include 'products/list.html.twig' %}
+                    <!-- end list products -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- modal detail product -->
+    {% include 'products/detail.html.twig' %}
+    <!-- end modal detail product -->
+{% endblock %}
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!--  assets AngularJs products -->
+        {% include 'products/assets.html.twig' %}
+    <!--  end assets AngularJs products -->
+{% endblock %}

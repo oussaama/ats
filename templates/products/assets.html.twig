@@ -1,0 +1,190 @@
+<script type="text/javascript">
+    var app = angular.module('ProductsApp', []);
+    app.config(function ($locationProvider, $interpolateProvider) {
+        $locationProvider.html5Mode({enabled: true});
+        $interpolateProvider.startSymbol('{$');
+        $interpolateProvider.endSymbol('$}');
+    });
+
+    app.controller('CtrlProduct', function ($scope, $http) {
+        $scope.limit = 20;
+        $scope.category = null;
+        $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/1';
+
+        //get total number products
+        urlTotal = 'http://localhost/ats/public/index.php/api/products/total';
+        var n = 0;
+        $http.get(urlTotal).then(function (response) {
+            n = Math.ceil(response.data.total / 20);
+            $scope.page = 1;
+            if (n > 0) {
+                $scope.pages = [];
+                for (var i = 1; i <= n; i++) {
+                    $scope.pages.push(i);
+                }
+            }
+
+        });
+
+        //get products by paginations
+        $http.get($scope.url).then(function (response) {
+            if (response.message == null) {
+                $scope.products = JSON.parse(response.data);
+            }
+        });
+
+        //get categories
+        urlCategories = 'http://localhost/ats/public/index.php/api/products/categories';
+        $http.get(urlCategories).then(function (response) {
+            if (response.message == null) {
+                $scope.categories = JSON.parse(response.data);
+            }
+        });
+
+
+        $scope.filterPagination = function () {
+            //filter paginator
+            $scope.category = $scope.categoryProduct;
+            if ($scope.categoryProduct != null) {
+                urlTotal = 'http://localhost/ats/public/index.php/api/products/total?category=' + $scope.category;
+            } else {
+                urlTotal = 'http://localhost/ats/public/index.php/api/products/total';
+            }
+            $http.get(urlTotal).then(function (response) {
+                n = Math.ceil(response.data.total / $scope.limit);
+
+                $scope.page = 1;
+                if (n > 0) {
+                    $scope.pages = [];
+                    for (var i = 1; i <= n; i++) {
+                        $scope.pages.push(i);
+                    }
+                }
+            });
+
+            //filter products
+            if ($scope.categoryProduct != null) {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/1?category=' + $scope.category;
+            } else {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/1';
+            }
+            $http.get($scope.url).then(function (response) {
+                if (response.message == null) {
+                    $scope.products = JSON.parse(response.data);
+                }
+            });
+        };
+
+        $scope.limitPagination = function () {
+            //filter paginator
+            $scope.limit = $scope.limitProduct;
+            if ($scope.category != null) {
+                urlTotal = 'http://localhost/ats/public/index.php/api/products/total?category=' + $scope.category;
+            } else {
+                urlTotal = 'http://localhost/ats/public/index.php/api/products/total';
+            }
+            $http.get(urlTotal).then(function (response) {
+                n = Math.ceil(response.data.total / $scope.limit);
+                $scope.page = 1;
+                if (n > 0) {
+                    $scope.pages = [];
+                    for (var i = 1; i <= n; i++) {
+                        $scope.pages.push(i);
+                    }
+                }
+            });
+
+            //filter products
+            if ($scope.categoryProduct != null) {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/1?category=' + $scope.categoryProduct;
+            } else {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/1';
+            }
+            $http.get($scope.url).then(function (response) {
+                if (response.message == null) {
+                    $scope.products = JSON.parse(response.data);
+                }
+            });
+        };
+
+        $scope.getPage = function (p) {
+            if (p != $scope.page) {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/' + p;
+                if ($scope.category != null) {
+                    $scope.url += '?category=' + $scope.category;
+                }
+                $http.get($scope.url).then(function (response) {
+                    if (response.message == null) {
+                        $scope.products = JSON.parse(response.data);
+                        $scope.page = p;
+                    }
+                });
+            }
+        };
+
+        $scope.nextPage = function (p) {
+            p = p + 1;
+            if (p <= n) {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/' + p;
+                if ($scope.category != null) {
+                    $scope.url += '?category=' + $scope.category;
+                }
+                $http.get($scope.url).then(function (response) {
+                    if (response.message == null) {
+                        $scope.products = JSON.parse(response.data);
+                        $scope.page = p;
+                    }
+                });
+            }
+        };
+
+        $scope.prevPage = function (p) {
+            p = p - 1;
+            if (p > 0) {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/' + p;
+                if ($scope.category != null) {
+                    $scope.url += '?category=' + $scope.category;
+                }
+                $http.get($scope.url).then(function (response) {
+                    if (response.message == null) {
+                        $scope.products = JSON.parse(response.data);
+                        $scope.page = p;
+                    }
+                });
+            }
+        };
+
+        $scope.isActive = function (p) {
+            return p === $scope.page;
+        };
+
+        $scope.noPrevious = function () {
+            return $scope.page === 1;
+        };
+
+        $scope.noNext = function () {
+            return $scope.page === n;
+        };
+
+        $scope.detailProduct = function (id) {
+            //filter paginator
+            urlDetail = 'http://localhost/ats/public/index.php/api/product/' + id;
+            $http.get(urlDetail).then(function (response) {
+                if (response.message == null) {
+                    $scope.productDetail = JSON.parse(response.data);
+                    $('.modal-title').text($scope.productDetail.productName);
+                    $('.card-img-top').attr('src', $scope.productDetail.imageUrl);
+                    $('.card-title').text($scope.productDetail.Details);
+
+                    html = "";
+                    for (i = 0; i < $scope.productDetail.reviews.length; i++) {
+                        html += "<tr> <td>" + $scope.productDetail.reviews[i].Rating + "</td>\n" +
+                            " <td>" + $scope.productDetail.reviews[i].content + "</td></tr>";
+                    }
+                    $('.review').html(html);
+                    console.log($scope.productDetail);
+                }
+            });
+        };
+    });
+</script>

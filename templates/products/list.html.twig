@@ -1,0 +1,64 @@
+<h2 class="text-center title-page">Product List</h2>
+<div class="m-2">
+    <div class="row">
+        <div class="col-2">
+            <select class="form-control custom-select" ng-model="limitProduct" ng-change="limitPagination()">
+                <option value="20" selected="selected">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+        <div class="col-7">
+
+        </div>
+        <div class="col-3">
+            <select class="form-control custom-input" ng-model="categoryProduct" ng-change="filterPagination()">
+                <option value="">Choisir Categorie</option>
+                <option ng-repeat="c in categories" value="{$ c.category $}">{$ c.category $}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="table100 ver4 m-b-110">
+    <table data-vertable="ver4">
+        <thead>
+        <tr class="row100 head">
+            <th class="column1 text-center" data-column="column1">#</th>
+            <th class="column2 text-center">Name</th>
+            <th class="column2 text-center">Price</th>
+            <th class="column2 text-center">Category</th>
+            <th class="column2 text-center">Brand</th>
+            <th class="column2 text-center">Material</th>
+            <th class="column2 text-center">Delivery</th>
+            <th class="column2 text-center">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="row100" ng-repeat="product in products|filter:filterGlobal">
+            <td class="text-center">{$ product.id $}</td>
+            <td class="text-center">{$ product.productName $}</td>
+            <td class="text-center">{$ product.basePrise $}</td>
+            <td class="text-center">{$ product.category $}</td>
+            <td class="text-center">{$ product.brand $}</td>
+            <td class="text-center">{$ product.productMaterial $}</td>
+            <td class="text-center">{$ product.Delivery | date : format : timezone $}</td>
+            <td class="text-center">
+                <span class="btn btn-danger" ng-click="detailProduct(product.id)" data-toggle="modal" data-target="#DetailProduct">Detail</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="navigation">
+    <ul class="pagination float-right">
+        <li ng-class="{'disabled page-item': noPrev()}"><a class="page-link" ng-click="prevPage(page)">Previous</a>
+        </li>
+        <li ng-class="{'active page-item': isActive(p)}" ng-repeat="p in pages"><a class="page-link" ng-click="getPage(p)">{$ p $}</a>
+        </li>
+        <li ng-class="{'disabled page-item': noNext()}"><a class="page-link" ng-click="nextPage(page)">Next</a>
+        </li>
+    </ul>
+</div>
