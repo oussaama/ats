@@ -6,7 +6,7 @@
         $interpolateProvider.endSymbol('$}');
     });
 
-    app.controller('CtrlProduct', function ($scope,$rootScope, $http) {
+    app.controller('CtrlProduct', function ($scope, $rootScope, $http) {
         $scope.limit = 20;
         $scope.category = null;
         $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/1';
@@ -74,6 +74,66 @@
                 }
             });
         };
+        $scope.type = true;
+        $scope.productFilter = function (property) {
+            if (property == $scope.orderList) {
+                $scope.type = !$scope.type;
+            }
+            $scope.orderList = property;
+            if ($scope.categoryProduct != null) {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/' + $scope.page + '?category=' + $scope.category + '&orderBy=' + property + '&type=' + $scope.type;
+            } else {
+                $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/' + $scope.page + '?orderBy=' + property + '&type=' + $scope.type;
+            }
+            $http.get($scope.url).then(function (response) {
+                if (response.message == null) {
+                    $scope.products = JSON.parse(response.data);
+                    reverseOrder(property);
+                }
+            });
+
+        };
+
+        $scope.typeId = true;
+        $scope.typeName = true;
+        $scope.typePrice = true;
+        $scope.typeCategory = true;
+        $scope.typeBrand = true;
+        $scope.typeMaterial = true;
+        $scope.typeDelivery = true;
+
+        function reverseOrder(property) {
+            switch (property) {
+                case 'id':
+                    $scope.typeName = $scope.typePrice = $scope.typeCategory = $scope.typeBrand = $scope.typeMaterial = $scope.typeDelivery = true;
+                    $scope.typeId = !$scope.typeId;
+                    break;
+                case 'productName':
+                    $scope.typeId =  $scope.typePrice = $scope.typeCategory = $scope.typeBrand = $scope.typeMaterial = $scope.typeDelivery = true;
+                    $scope.typeName = !$scope.typeName;
+                    break;
+                case 'basePrise':
+                    $scope.typeId = $scope.typeName =  $scope.typeCategory = $scope.typeBrand = $scope.typeMaterial = $scope.typeDelivery = true;
+                    $scope.typePrice = !$scope.typePrice;
+                    break;
+                case 'category':
+                    $scope.typeId = $scope.typeName = $scope.typePrice =  $scope.typeBrand = $scope.typeMaterial = $scope.typeDelivery = true;
+                    $scope.typeCategory = !$scope.typeCategory;
+                    break;
+                case 'brand':
+                    $scope.typeId = $scope.typeName = $scope.typePrice = $scope.typeCategory = $scope.typeMaterial = $scope.typeDelivery = true;
+                    $scope.typeBrand = !$scope.typeBrand;
+                    break;
+                case 'productMaterial':
+                    $scope.typeId = $scope.typeName = $scope.typePrice = $scope.typeCategory = $scope.typeBrand = $scope.typeDelivery = true;
+                    $scope.typeMaterial = !$scope.typeMaterial;
+                    break;
+                case 'Delivry':
+                    $scope.typeId = $scope.typeName = $scope.typePrice = $scope.typeCategory = $scope.typeBrand = $scope.typeMaterial =  true;
+                    $scope.typeDelivery = !$scope.typeDelivery;
+                    break;
+            }
+        }
 
         $scope.limitPagination = function () {
             //filter paginator
@@ -111,7 +171,9 @@
             if (p != $scope.page) {
                 $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/' + p;
                 if ($scope.category != null) {
-                    $scope.url += '?category=' + $scope.category;
+                    $scope.url += '?category=' + $scope.category + '&orderBy=' + $scope.orderList + '&type=' + $scope.type;
+                } else {
+                    $scope.url += '?orderBy=' + $scope.orderList + '&type=' + $scope.type;
                 }
                 $http.get($scope.url).then(function (response) {
                     if (response.message == null) {
@@ -127,7 +189,9 @@
             if (p <= n) {
                 $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/' + p;
                 if ($scope.category != null) {
-                    $scope.url += '?category=' + $scope.category;
+                    $scope.url += '?category=' + $scope.category + '&orderBy=' + $scope.orderList + '&type=' + $scope.type;
+                } else {
+                    $scope.url += '?orderBy=' + $scope.orderList + '&type=' + $scope.type;
                 }
                 $http.get($scope.url).then(function (response) {
                     if (response.message == null) {
@@ -137,13 +201,15 @@
                 });
             }
         };
-
+        
         $scope.prevPage = function (p) {
             p = p - 1;
             if (p > 0) {
                 $scope.url = 'http://localhost/ats/public/index.php/api/products/' + $scope.limit + '/' + p;
                 if ($scope.category != null) {
-                    $scope.url += '?category=' + $scope.category;
+                    $scope.url += '?category=' + $scope.category + '&orderBy=' + property + '&type=' + $scope.type;
+                } else {
+                    $scope.url += '?orderBy=' + $scope.orderList + '&type=' + $scope.type;
                 }
                 $http.get($scope.url).then(function (response) {
                     if (response.message == null) {
@@ -166,6 +232,7 @@
             return $scope.page === n;
         };
 
+        //detail product
         $scope.detailProduct = function (id) {
             //filter paginator
             urlDetail = 'http://localhost/ats/public/index.php/api/product/' + id;
@@ -178,12 +245,12 @@
 
                     html = "";
                     for (i = 0; i < $scope.productDetail.reviews.length; i++) {
-                        html += '<div class="media border p-3"> \n'+
-                        '<img src="https://www.w3schools.com/bootstrap4/img_avatar3.png" alt="John Doe" class="mr-3" style="width:60px;"> \n'+
-                           '<div class="media-body">\n'+
-                            '<h5>Rating :'+$scope.productDetail.reviews[i].Rating+'<small><i> Posted on February 19, 2016</i></small></h5> \n'+
-                        '<p>'+$scope.productDetail.reviews[i].content+'</p>\n'+
-                        '</div> </div>';
+                        html += '<div class="media border p-3"> \n' +
+                            '<img src="https://www.w3schools.com/bootstrap4/img_avatar3.png" alt="John Doe" class="mr-3" style="width:60px;"> \n' +
+                            '<div class="media-body">\n' +
+                            '<h5>Rating :' + $scope.productDetail.reviews[i].Rating + '<small><i> Posted on February 19, 2016</i></small></h5> \n' +
+                            '<p>' + $scope.productDetail.reviews[i].content + '</p>\n' +
+                            '</div> </div>';
                     }
                     $('.review').html(html);
                     console.log($scope.productDetail);
@@ -191,10 +258,11 @@
             });
         };
 
+        //load update product
         $scope.loadProduct = function (product) {
-            $scope.editProduct={
+            $scope.editProduct = {
                 'productName': product.productName,
-                'basePrise':product.basePrise,
+                'basePrise': product.basePrise,
                 'Delivery': product.Delivery,
                 'Details': product.Details,
                 'brand': product.brand,
@@ -205,12 +273,23 @@
             };
         };
 
-
-        $scope.update = function () {
-            //filter paginator
-            urlUpdate = 'http://localhost/ats/public/index.php/api/product/update';
-            $http.post(urlUpdate,{ 'product' : JSON.stringify($scope.editProduct) }).then(function (response) {
+        //add product
+        $scope.add = function () {
+            addUpdate = 'http://localhost/ats/public/index.php/api/product/add';
+            $scope.addProduct.imageUrl = 'http://lorempixel.com/640/480/technics?t=1482154441049';
+            console.log($scope.addProduct);
+            $http.post(addUpdate, {'product': JSON.stringify($scope.addProduct)}).then(function (response) {
                 if (response.message == null) {
+                    window.location.reload(true);
+                }
+            });
+        };
+
+        //update product
+        $scope.update = function () {
+            urlUpdate = 'http://localhost/ats/public/index.php/api/product/update';
+            $http.post(urlUpdate, {'product': JSON.stringify($scope.editProduct)}).then(function (response) {
+                if (response.message === 'success') {
                     window.location.reload(true);
                 }
             });

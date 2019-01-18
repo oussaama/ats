@@ -23,10 +23,15 @@ class ProductsController extends Controller
     public function getApiProductsAction(Request $request,$limit,$offset)
     {
         $em = $this->getDoctrine()->getManager();
+        $order = $request->query->get('orderBy') != null ?$request->query->get('orderBy'):'id';
+        $orderType = 'DESC';
+        if($request->query->get('type') == 'true' || $request->query->get('type') == null){
+            $orderType = 'ASC';
+        }
         if($request->query->get('category')!= null){
-            $products = $em->getRepository(Products::class)->findBy(['category' => $request->query->get('category')],['id'=>'ASC'],$limit,$limit*($offset-1));
+            $products = $em->getRepository(Products::class)->findBy(['category' => $request->query->get('category')],[$order=>$orderType],$limit,$limit*($offset-1));
         }else{
-            $products = $em->getRepository(Products::class)->findBy([],['id'=>'ASC'],$limit,$limit*($offset-1));
+            $products = $em->getRepository(Products::class)->findBy([],[$order=>$orderType],$limit,$limit*($offset-1));
         }
         if (empty($products)) {
         return new JsonResponse(['message' => 'Products Not Found'], Response::HTTP_NOT_FOUND);
@@ -91,6 +96,38 @@ class ProductsController extends Controller
         $object = $serializer->serialize($product, 'json');
 
         $view = View::create($object);
+        $view->setFormat('json');
+
+        return $view;
+    }
+
+    /**
+     * @Rest\View()
+     * @Rest\Post("/api/product/add")
+     */
+    public function postApiProductAddAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $json = $request->get('product');
+        $productObj = json_decode($json,true);
+
+        $product = new Products();
+        if (empty($productObj)) {
+            return new JsonResponse(['message' => 'Product Not inserted'], Response::HTTP_NOT_FOUND);
+        }
+        $product->addProduct(
+            $productObj['productName'],
+            $productObj['basePrise'],
+            $productObj['category'],
+            $productObj['brand'],
+            $productObj['productMaterial'],
+            $productObj['imageUrl'],
+            $productObj['Delivery'],
+            $productObj['Details']
+        );
+        $em->persist($product);
+        $em->flush();
+        $view = View::create(['message'=>'success']);
         $view->setFormat('json');
 
         return $view;

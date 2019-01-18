@@ -9,14 +9,14 @@
             </select>
         </div>
         <div class="col-7">
-
-        </div>
-        <div class="col-3">
             <select class="form-control custom-input" ng-model="categoryProduct" ng-change="filterPagination()">
                 <option value="">Choisir Categorie</option>
                 <option ng-repeat="c in categories" value="{$ c.category $}">{$ c.category $}
                 </option>
             </select>
+        </div>
+        <div class="col-3">
+            <span class="btn btn-danger float-right" data-toggle="modal" data-target="#AddProduct"><i class="fa fa-plus" aria-hidden="true"></i> Add</span>
         </div>
     </div>
 </div>
@@ -24,14 +24,38 @@
     <table data-vertable="ver4">
         <thead>
         <tr class="row100 head">
-            <th class="column1 text-center">#</th>
-            <th class="column2 text-center">Name</th>
-            <th class="column2 text-center">Price</th>
-            <th class="column2 text-center">Category</th>
-            <th class="column2 text-center">Brand</th>
-            <th class="column2 text-center">Material</th>
-            <th class="column2 text-center">Delivery</th>
-            <th class="column2 text-center">Action</th>
+            <th class="text-center" ng-click="productFilter('id')">
+                Id
+                <span class="fa fa-sort-amount-asc" ng-if="(typeId)"></span>
+                <span class="fa fa-sort-amount-desc" ng-if="!(typeId)"></span>
+            </th>
+            <th class="text-center" ng-click="productFilter('productName')">
+                Name
+                <span class="fa fa-sort-amount-asc" ng-if="(typeName)"></span>
+                <span class="fa fa-sort-amount-desc" ng-if="!(typeName)"></span>
+            </th>
+            <th class="text-center" ng-click="productFilter('basePrise')">
+                Price
+                <span class="fa fa-sort-amount-asc" ng-if="(typePrice)"></span>
+                <span class="fa fa-sort-amount-desc" ng-if="!(typePrice)"></span>
+            </th>
+            <th class="text-center" ng-click="productFilter('category')">Category
+                <span class="fa fa-sort-amount-asc" ng-if="(typeCategory)"></span>
+                <span class="fa fa-sort-amount-desc" ng-if="!(typeCategory)"></span>
+            </th>
+            <th class="text-center" ng-click="productFilter('brand')">Brand
+                <span class="fa fa-sort-amount-asc" ng-if="(typeBrand)"></span>
+                <span class="fa fa-sort-amount-desc" ng-if="!(typeBrand)"></span>
+            </th>
+            <th class="text-center" ng-click="productFilter('productMaterial')">Material
+                <span class="fa fa-sort-amount-asc" ng-if="(typeMaterial)"></span>
+                <span class="fa fa-sort-amount-desc" ng-if="!(typeMaterial)"></span>
+            </th>
+            <th class="text-center" ng-click="productFilter('Delivrey')">Delivery
+                <span class="fa fa-sort-amount-asc" ng-if="(typeDelivery)"></span>
+                <span class="fa fa-sort-amount-desc" ng-if="!(typeDelivery)"></span>
+            </th>
+            <th class="text-center">Action</th>
         </tr>
         </thead>
         <tbody>

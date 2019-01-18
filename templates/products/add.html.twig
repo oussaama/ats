@@ -1,0 +1,51 @@
+<div id="AddProduct" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title text-light">Add Product</h4>
+                <button type="button" class="close text-light" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="add(addProduct)">
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="validationServer01">Name</label>
+                            <input type="text" class="form-control" id="validationServer01" placeholder="Name" ng-model="addProduct.productName"  required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationServer02">Price</label>
+                            <input type="number" class="form-control" id="validationServer02" placeholder="Price" ng-model="addProduct.basePrise" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationServer03">Category</label>
+                            <input type="text" class="form-control" id="validationServer03" placeholder="Category" ng-model="addProduct.category" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationServer04">Brand</label>
+                            <input type="text" class="form-control is-invalid" id="validationServer04" placeholder="Brand" ng-model="addProduct.brand"required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="validationServer05">Material</label>
+                            <input type="text" class="form-control is-invalid" id="validationServer05" placeholder="Material" ng-model="addProduct.productMaterial"required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="validationServer06">Delivery</label>
+                            <input type="text" class="form-control is-invalid" id="validationServer06" placeholder="Delevery" ng-model="addProduct.Delivery" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="validationServer07">Details</label>
+                            <textarea class="form-control is-invalid" id="validationServer07" ng-model="addProduct.Details"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger float-right" type="submit" >Add Product</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
