@@ -15,7 +15,7 @@
         urlTotal = 'http://localhost/ats/public/index.php/api/products/total';
         var n = 0;
         $http.get(urlTotal).then(function (response) {
-            n = Math.ceil(response.data.total / 20);
+            n = Math.ceil(response.data.total / $scope.limit );
             $scope.page = 1;
             if (n > 0) {
                 $scope.pages = [];
@@ -74,7 +74,7 @@
                 }
             });
         };
-        $scope.type = true;
+        $scope.orderList ='id';
         $scope.productFilter = function (property) {
             if (property == $scope.orderList) {
                 $scope.type = !$scope.type;
@@ -94,7 +94,7 @@
 
         };
 
-        $scope.typeId = true;
+        $scope.typeId = false;
         $scope.typeName = true;
         $scope.typePrice = true;
         $scope.typeCategory = true;
@@ -201,7 +201,7 @@
                 });
             }
         };
-        
+
         $scope.prevPage = function (p) {
             p = p - 1;
             if (p > 0) {

@@ -25,7 +25,7 @@ class ProductsController extends Controller
         $em = $this->getDoctrine()->getManager();
         $order = $request->query->get('orderBy') != null ?$request->query->get('orderBy'):'id';
         $orderType = 'DESC';
-        if($request->query->get('type') == 'true' || $request->query->get('type') == null){
+        if($request->query->get('type') == 'true' || $request->query->get('type') == 'undefined'){
             $orderType = 'ASC';
         }
         if($request->query->get('category')!= null){
